@@ -1,0 +1,10 @@
+
+# Used if you want multi node setups
+[elasticsearch_servers]
+
+[logstash_servers]
+
+[kibana_servers]
+
+[curator]
+
