@@ -2,7 +2,7 @@
 
 # Default Ansible user
 # change this if you use a non-root user for running Ansible playbooks
-ansible_system_user: root
+ansible_system_user: huke
 
 # EPEL Repository for extra packages
 epel_repo: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
@@ -50,10 +50,24 @@ kibana_password: admin
 # if left empty logstash will be used
 ### accepted options ###
 # logging_backend:
-# logging_backend: logstash
+logging_backend: logstash
 # logging_backend: fluentd
-logging_backend:
+#logging_backend:
 #
+#Logstash Ports
+LS_ports_tcp: [
+                "514", 
+                "1514", 
+                "5544"
+]
+LS_ports_udp: [
+                "514", 
+                "1514", 
+                "5544"
+]
+#Elastic cluster setting.
+ES_cluster_name: "section9"
+ES_data_path: "/elk-data"
 ### logstash options ###
 logstash_syslog_port: 5044
 logstash_localsyslog_port: 5000
@@ -72,13 +86,14 @@ fluentd_debug_port: 24230
 # to true
 # we will set this to false by default
 es_local_port: 9200
-es_listen_external: false
+es_node_com: 9300
+es_listen_external: true
 ### install curator tool ###
 # curator is the recommended tool for managing elasticsearch indexes
 # https://www.elastic.co/guide/en/elasticsearch/client/curator/current/index.html
 # default is no (set to blank) or false
 # set the below variable to 'true' to activate
-install_curator_tool: false
+install_curator_tool: true
 ## X-PACK
 # This installs an additional suite of tools from elastic
 # https://www.elastic.co/guide/en/x-pack/current/xpack-introduction.html

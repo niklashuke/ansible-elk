@@ -34,6 +34,7 @@
     mode=0660
   become: true
   ignore_errors: true
+  tags: es-temp
 
 - name: Check if system memory is greater than 64G
   debug: msg="System memory is {{ansible_memory_mb.real.total | int}} so setting heapsize to 32G upper limit"
@@ -65,9 +66,19 @@
 
 # https://www.centos.org/forums/viewtopic.php?t=16398
 - name: Obtain exact version of JRE for libjli.so workaround
-  shell: "ls /usr/lib/jvm/ | grep java | grep openjdk-1"
+  shell: "ls -r /usr/lib/jvm/ | grep java | awk 'NR==1{print $1}' | grep openjdk-1"
   register: libjli_location
   become: true
+  tags:
+    - java-lib
+
+- name: remove old libjli.so
+  file:
+    path='/lib64/libjli.so'
+    state=absent
+  ignore_errors: true
+  tags:
+    - java-lib
 
 - name: Apply EL symlink workaround for libjli.so
   file:
@@ -75,6 +86,8 @@
     dest='/lib64/libjli.so'
     state=link
   become: true
+  tags:
+    - java-lib
 
 - name: Start elasticsearch service
   command: systemctl start elasticsearch.service
